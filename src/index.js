@@ -3,7 +3,7 @@ const protoLoader = require('@grpc/proto-loader');
 const {promisifyAll} = require("grpc-promise");
 
 const packageDefinition = protoLoader.loadSync(
-    `${__dirname}/../protos/wallet.proto`,
+    `${__dirname}/../protos/base_node.proto`,
     {
         keepCase: true,
         longs: String,
