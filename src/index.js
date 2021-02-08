@@ -23,7 +23,7 @@ function connect(address) {
 function Client(address) {
     this.inner = connect(address);
 
-   ['getVersion', 'listHeaders'].forEach((method) => {
+   ['getVersion', 'listHeaders', 'getBlocks'].forEach((method) => {
         this[method] = (arg) => this.inner[method]().sendMessage(arg);
     })
 }
