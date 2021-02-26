@@ -72,6 +72,7 @@ function main(args) {
         srcUrls = [
             `https://raw.githubusercontent.com/tari-project/tari/${branch}/applications/tari_app_grpc/proto/types.proto`,
             `https://raw.githubusercontent.com/tari-project/tari/${branch}/applications/tari_app_grpc/proto/base_node.proto`,
+            `https://raw.githubusercontent.com/tari-project/tari/${branch}/applications/tari_app_grpc/proto/wallet.proto`,
         ];
     } else {
         srcUrls = args;
