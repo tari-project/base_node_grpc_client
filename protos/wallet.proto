@@ -39,9 +39,16 @@ service Wallet {
     // Returns the transaction details for the given transaction IDs
     rpc GetTransactionInfo (GetTransactionInfoRequest) returns (GetTransactionInfoResponse);
     // Returns all transactions' details
-    rpc GetAllCompletedTransactions (GetAllCompletedTransactionsRequest) returns (GetTransactionInfoResponse);
+    rpc GetCompletedTransactions (GetCompletedTransactionsRequest) returns (stream GetCompletedTransactionsResponse);
     // Returns the balance
     rpc GetBalance (GetBalanceRequest) returns (GetBalanceResponse);
+    // Request the wallet perform a coinsplit
+    rpc CoinSplit (CoinSplitRequest) returns (CoinSplitResponse);
+    // Import Utxo to wallet
+    rpc ImportUtxos (ImportUtxosRequest) returns (ImportUtxosResponse);
+
+    // Mint base layer tokens for an asset
+    rpc MintTokens(MintTokensRequest) returns (MintTokensResponse);
 }
 
 message GetVersionRequest { }
@@ -67,6 +74,11 @@ message PaymentRecipient {
     uint64 amount = 2;
     uint64 fee_per_gram = 3;
     string message = 4;
+    enum PaymentType {
+        STANDARD_MIMBLEWIMBLE = 0;
+        ONE_SIDED = 1;
+    }
+    PaymentType payment_type = 5;
 }
 
 message TransferResponse {
@@ -101,6 +113,7 @@ message TransactionInfo {
     google.protobuf.Timestamp timestamp = 10;
     string message = 11;
     bool valid = 12;
+    bool is_found = 13;
 }
 
 enum TransactionDirection {
@@ -126,7 +139,11 @@ enum TransactionStatus {
     TRANSACTION_STATUS_MINED_CONFIRMED = 6;
 }
 
-message GetAllCompletedTransactionsRequest { }
+message GetCompletedTransactionsRequest { }
+
+message GetCompletedTransactionsResponse {
+    TransactionInfo transaction = 1;
+}
 
 message GetBalanceRequest { }
 
@@ -144,4 +161,33 @@ message GetCoinbaseRequest {
 
 message GetCoinbaseResponse {
     Transaction transaction = 1;
+}
+
+message CoinSplitRequest {
+    uint64 amount_per_split = 1;
+    uint64 split_count = 2;
+    uint64 fee_per_gram = 3;
+    string message = 4;
+    uint64 lock_height = 5;
+}
+
+message CoinSplitResponse {
+    uint64 tx_id = 1;
+}
+
+message ImportUtxosRequest {
+    repeated UnblindedOutput outputs = 1;
+}
+
+message ImportUtxosResponse {
+    repeated uint64 tx_ids = 1;
+}
+
+message MintTokensRequest {
+    bytes asset_public_key = 1;
+    repeated bytes unique_ids = 2;
+}
+
+message MintTokensResponse {
+    repeated bytes owner_commitments =1;
 }
